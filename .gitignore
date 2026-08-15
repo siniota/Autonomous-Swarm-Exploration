@@ -1,0 +1,9 @@
+# ROS 2 workspaces
+build/
+install/
+log/
+.temp_clone/
+
+# Python
+__pycache__/
+*.pyc
