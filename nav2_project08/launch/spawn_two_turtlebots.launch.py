@@ -34,13 +34,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import PushRosNamespace
 
-
-# ---- Robot roster: name, spawn pose -----------------------------------
-ROBOTS = [
-    {"name": "robot1", "x": -2.0, "y": -0.5},
-    {"name": "robot2", "x": 2.0, "y": 0.5},
-]
-
+from nav2_project08.generate_random_world import generate_random_world
 
 def generate_launch_description():
     turtlebot3_model = os.environ["TURTLEBOT3_MODEL"]  # raises clearly if unset
@@ -55,7 +49,26 @@ def generate_launch_description():
     )
     tmp_prefix = os.path.join(tb3_gazebo_dir, "models", model_folder, "tmp")
 
-    world = os.path.join(tb3_gazebo_dir, "worlds", "turtlebot3_world.world")
+    seed_str = os.environ.get("GAZEBO_WORLD_SEED", None)
+    seed = int(seed_str) if seed_str is not None else None
+    
+    use_house = os.environ.get("USE_HOUSE", "0") == "1"
+    
+    if use_house:
+        tb3_gazebo_dir = get_package_share_directory("turtlebot3_gazebo")
+        world_path = os.path.join(tb3_gazebo_dir, "worlds", "turtlebot3_house.world")
+        # Safe open space in the house (living room area)
+        spawn_poses = [[-2.0, -0.5], [-1.0, -0.5]]
+    else:
+        world_path, spawn_poses = generate_random_world(seed=seed)
+        
+    world = world_path
+    
+    ROBOTS = [
+        {"name": "robot1", "x": spawn_poses[0][0], "y": spawn_poses[0][1]},
+        {"name": "robot2", "x": spawn_poses[1][0], "y": spawn_poses[1][1]},
+    ]
+
     use_sim_time = LaunchConfiguration("use_sim_time", default="true")
 
     gzserver_cmd = IncludeLaunchDescription(
@@ -86,6 +99,35 @@ def generate_launch_description():
             tag.text = f"{name}/base_footprint"
         for tag in root.iter("frame_name"):
             tag.text = f"{name}/base_scan"
+            
+        # [REVERSIBLE GAZEBO ENHANCEMENT] 
+        # Disable the blue LiDAR ray fan visualization in Gazebo.
+        # To REVERSE this and show the laser fans again, simply comment out the lines below:
+        for sensor in root.iter("sensor"):
+            if sensor.get("name") == "hls_lfcd_lds":
+                viz_tag = sensor.find("visualize")
+                if viz_tag is not None:
+                    viz_tag.text = "false"
+                    
+        # [GAZEBO ENHANCEMENT]
+        # Colorize the robot chassis (Robot1 = Turquoise, Robot2 = Orange)
+        for link in root.iter("link"):
+            if link.get("name") == "base_link":
+                for visual in link.iter("visual"):
+                    if visual.get("name") == "base_visual":
+                        material = visual.find("material")
+                        if material is not None:
+                            for child in list(material):
+                                material.remove(child)
+                            script = ET.SubElement(material, "script")
+                            uri = ET.SubElement(script, "uri")
+                            uri.text = "file://media/materials/scripts/gazebo.material"
+                            mat_name = ET.SubElement(script, "name")
+                            if name == "robot1":
+                                mat_name.text = "Gazebo/Turquoise"
+                            elif name == "robot2":
+                                mat_name.text = "Gazebo/Orange"
+        
         sdf_out_path = f"{tmp_prefix}_{name}.sdf"
         with open(sdf_out_path, "w") as f:
             f.write('<?xml version="1.0" ?>\n' + ET.tostring(root, encoding="unicode"))
@@ -127,6 +169,10 @@ def generate_launch_description():
                 os.remove(p)
             except OSError:
                 pass
+        try:
+            os.remove(world_path)
+        except OSError:
+            pass
 
     ld.add_action(RegisterEventHandler(OnShutdown(on_shutdown=_cleanup_tmp_sdfs)))
 

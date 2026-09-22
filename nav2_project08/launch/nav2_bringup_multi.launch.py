@@ -6,7 +6,7 @@ A bulletproof, auto-activating multi-robot launch script.
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import GroupAction
+from launch.actions import GroupAction, TimerAction
 from launch_ros.actions import Node, PushRosNamespace
 
 ROBOTS = ["robot1", "robot2"]
@@ -98,7 +98,11 @@ def generate_launch_description():
             ),
         ]
 
-        ld.add_action(GroupAction([PushRosNamespace(name), *nodes]))
+        group = GroupAction([PushRosNamespace(name), *nodes])
+        if name == "robot2":
+            ld.add_action(TimerAction(period=8.0, actions=[group]))
+        else:
+            ld.add_action(group)
 
     return ld
 

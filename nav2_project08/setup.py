@@ -15,7 +15,7 @@ setup(
         (os.path.join("share", package_name, "launch"),
             glob(os.path.join("launch", "*.launch.py"))),
         (os.path.join("share", package_name, "config"),
-            glob(os.path.join("config", "*.yaml"))),
+            glob(os.path.join("config", "*.yaml")) + glob(os.path.join("config", "*.rviz"))),
     ],
     install_requires=["setuptools"],
     zip_safe=True,
@@ -26,6 +26,7 @@ setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": ['map_merge_node = nav2_project08.map_merge_node:main',
-        'frontier_coordinator = nav2_project08.frontier_coordinator:main',],
+        'frontier_coordinator = nav2_project08.frontier_coordinator:main',
+        'waypoint_navigator = nav2_project08.waypoint_navigator:main',],
     },
 )
