@@ -24,7 +24,7 @@ for Humble):
 
 Run LAST, after spawn, multi_robot_slam, map_merge, and
 nav2_bringup_multi are all already running:
-  ros2 launch nav2_project08 explore_multi.launch.py
+  ros2 launch multi_robot_exploration explore_multi.launch.py
 """
 
 from launch import LaunchDescription

@@ -18,7 +18,7 @@ solves the two things that are easy to get wrong doing this from scratch:
      robot_state_publisher won't connect.
 
 Run with:
-  ros2 launch nav2_project08 spawn_two_turtlebots.launch.py
+  ros2 launch multi_robot_exploration spawn_two_turtlebots.launch.py
 
 Requires TURTLEBOT3_MODEL to be exported (e.g. export TURTLEBOT3_MODEL=burger)
 """
@@ -34,7 +34,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import PushRosNamespace
 
-from nav2_project08.generate_random_world import generate_random_world
+from multi_robot_exploration.generate_random_world import generate_random_world
 
 def generate_launch_description():
     turtlebot3_model = os.environ["TURTLEBOT3_MODEL"]  # raises clearly if unset

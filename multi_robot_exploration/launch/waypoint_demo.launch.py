@@ -21,7 +21,7 @@ def generate_launch_description():
     return LaunchDescription([
         start_delay_arg,
         Node(
-            package='nav2_project08',
+            package='multi_robot_exploration',
             executable='waypoint_navigator',
             name='waypoint_navigator',
             output='screen',

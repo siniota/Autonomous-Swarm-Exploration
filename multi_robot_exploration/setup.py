@@ -2,7 +2,7 @@ import os
 from glob import glob
 from setuptools import find_packages, setup
 
-package_name = "nav2_project08"
+package_name = "multi_robot_exploration"
 
 setup(
     name=package_name,
@@ -25,8 +25,8 @@ setup(
     license="Apache-2.0",
     tests_require=["pytest"],
     entry_points={
-        "console_scripts": ['map_merge_node = nav2_project08.map_merge_node:main',
-        'frontier_coordinator = nav2_project08.frontier_coordinator:main',
-        'waypoint_navigator = nav2_project08.waypoint_navigator:main',],
+        "console_scripts": ['map_merge_node = multi_robot_exploration.map_merge_node:main',
+        'frontier_coordinator = multi_robot_exploration.frontier_coordinator:main',
+        'waypoint_navigator = multi_robot_exploration.waypoint_navigator:main',],
     },
 )

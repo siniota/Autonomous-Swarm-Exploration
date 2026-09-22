@@ -22,7 +22,7 @@ LIFECYCLE_NODE_NAMES = [
 ]
 
 def generate_launch_description():
-    pkg_share = get_package_share_directory("nav2_project08")
+    pkg_share = get_package_share_directory("multi_robot_exploration")
     ld = LaunchDescription()
 
     for name in ROBOTS:

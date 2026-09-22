@@ -9,7 +9,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     return LaunchDescription([
         Node(
-            package='nav2_project08',
+            package='multi_robot_exploration',
             executable='frontier_coordinator',
             name='frontier_coordinator',
             output='screen',

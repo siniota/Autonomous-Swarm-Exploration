@@ -95,16 +95,16 @@ The system is structured as a **5-layer sequential pipeline**, where each layer 
 
 Every file in this package and what it does:
 
-### Python Nodes (`nav2_project08/`)
+### Python Nodes (`multi_robot_exploration/`)
 
 | File | Role | Status |
 |------|------|--------|
-| [`frontier_coordinator.py`](nav2_project08/frontier_coordinator.py) | **Primary brain** — detects frontiers from merged map, assigns robots using cost-matrix with spatial partitioning, manages Nav2 action goals, publishes RViz markers | ✅ Active |
-| [`map_merge_node.py`](nav2_project08/map_merge_node.py) | Fuses `/robot1/map` + `/robot2/map` → `/map` using known spawn transforms. Vectorized NumPy rasterization | ✅ Active |
-| [`generate_random_world.py`](nav2_project08/generate_random_world.py) | Procedurally generates Gazebo SDF worlds with random box/cylinder obstacles, boundary walls, and collision-free spawn zones | ✅ Active |
-| [`waypoint_navigator.py`](nav2_project08/waypoint_navigator.py) | Demo node — sends pre-defined waypoints to showcase map merging without frontier logic | ✅ Demo |
-| [`frontier_exploration.py`](nav2_project08/frontier_exploration.py) | Single-robot frontier explorer (v1) — superseded by `frontier_coordinator.py` | ⚠️ Deprecated |
-| [`__init__.py`](nav2_project08/__init__.py) | Package init | — |
+| [`frontier_coordinator.py`](multi_robot_exploration/frontier_coordinator.py) | **Primary brain** — detects frontiers from merged map, assigns robots using cost-matrix with spatial partitioning, manages Nav2 action goals, publishes RViz markers | ✅ Active |
+| [`map_merge_node.py`](multi_robot_exploration/map_merge_node.py) | Fuses `/robot1/map` + `/robot2/map` → `/map` using known spawn transforms. Vectorized NumPy rasterization | ✅ Active |
+| [`generate_random_world.py`](multi_robot_exploration/generate_random_world.py) | Procedurally generates Gazebo SDF worlds with random box/cylinder obstacles, boundary walls, and collision-free spawn zones | ✅ Active |
+| [`waypoint_navigator.py`](multi_robot_exploration/waypoint_navigator.py) | Demo node — sends pre-defined waypoints to showcase map merging without frontier logic | ✅ Demo |
+| [`frontier_exploration.py`](multi_robot_exploration/frontier_exploration.py) | Single-robot frontier explorer (v1) — superseded by `frontier_coordinator.py` | ⚠️ Deprecated |
+| [`__init__.py`](multi_robot_exploration/__init__.py) | Package init | — |
 
 ### Launch Files (`launch/`)
 
@@ -135,7 +135,7 @@ Every file in this package and what it does:
 | [`package.xml`](package.xml) | ROS 2 package manifest — declares dependencies (`gazebo_ros`, `slam_toolbox`, `nav2_bringup`, `tf2_ros`, etc.) |
 | [`setup.py`](setup.py) | Python package setup — registers `map_merge_node`, `frontier_coordinator`, `waypoint_navigator` as console_scripts |
 | [`setup.cfg`](setup.cfg) | Install script paths for ament_python |
-| [`resource/nav2_project08`](resource/nav2_project08) | Ament resource index marker |
+| [`resource/multi_robot_exploration`](resource/multi_robot_exploration) | Ament resource index marker |
 
 ### Documentation (`docs/`)
 
@@ -191,11 +191,11 @@ source ~/.bashrc
 ```bash
 # Clone into your ROS 2 workspace
 cd ~/ros2_ws/src
-git clone <this-repo-url> nav2_project08
+git clone <this-repo-url> multi_robot_exploration
 
 # Build
 cd ~/ros2_ws
-colcon build --packages-select nav2_project08
+colcon build --packages-select multi_robot_exploration
 source install/setup.bash
 ```
 
@@ -209,19 +209,19 @@ Launch each command in a **separate terminal**, waiting for each to fully initia
 
 ```bash
 # Terminal 1 — Spawn Gazebo world + robots
-ros2 launch nav2_project08 spawn_two_turtlebots.launch.py
+ros2 launch multi_robot_exploration spawn_two_turtlebots.launch.py
 
 # Terminal 2 — Start per-robot SLAM
-ros2 launch nav2_project08 multi_robot_slam.launch.py
+ros2 launch multi_robot_exploration multi_robot_slam.launch.py
 
 # Terminal 3 — Start map merging
-ros2 launch nav2_project08 map_merge.launch.py
+ros2 launch multi_robot_exploration map_merge.launch.py
 
 # Terminal 4 — Start Nav2 navigation stacks
-ros2 launch nav2_project08 nav2_bringup_multi.launch.py
+ros2 launch multi_robot_exploration nav2_bringup_multi.launch.py
 
 # Terminal 5 — Start frontier exploration
-ros2 launch nav2_project08 frontier_exploration.launch.py
+ros2 launch multi_robot_exploration frontier_exploration.launch.py
 ```
 
 ### Optional: Randomized Worlds
@@ -229,24 +229,24 @@ ros2 launch nav2_project08 frontier_exploration.launch.py
 ```bash
 # Set a seed for reproducible worlds
 export GAZEBO_WORLD_SEED=42
-ros2 launch nav2_project08 spawn_two_turtlebots.launch.py
+ros2 launch multi_robot_exploration spawn_two_turtlebots.launch.py
 
 # Or use TurtleBot3 house world instead of random
 export USE_HOUSE=1
-ros2 launch nav2_project08 spawn_two_turtlebots.launch.py
+ros2 launch multi_robot_exploration spawn_two_turtlebots.launch.py
 ```
 
 ### Alternative: Waypoint Demo (map merge showcase)
 
 Replace Terminal 5 with:
 ```bash
-ros2 launch nav2_project08 waypoint_demo.launch.py
+ros2 launch multi_robot_exploration waypoint_demo.launch.py
 ```
 
 ### Visualize in RViz2
 
 ```bash
-rviz2 -d $(ros2 pkg prefix nav2_project08)/share/nav2_project08/config/multi_robot_exploration_cinematic.rviz
+rviz2 -d $(ros2 pkg prefix multi_robot_exploration)/share/multi_robot_exploration/config/multi_robot_exploration_cinematic.rviz
 ```
 
 ---

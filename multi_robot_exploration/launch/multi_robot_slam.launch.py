@@ -5,7 +5,7 @@ Runs one slam_toolbox (async) instance per robot, namespaced, so each
 robot builds its own local map: /robot1/map and /robot2/map.
 
 Run AFTER spawn_two_turtlebots.launch.py:
-  ros2 launch nav2_project08 multi_robot_slam.launch.py
+  ros2 launch multi_robot_exploration multi_robot_slam.launch.py
 """
 
 from launch import LaunchDescription
